@@ -1,11 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Craft &amp; Bloom</title>
+<link rel="canonical" href="https://ideashometalk.com/">
+
+<script>
+  // The WordPress site every pin resolves to. NO trailing slash.
+  var TARGET = "https://ideashometalk.com";
+
+  (function () {
+    var slug;
+    try {
+      slug = new URLSearchParams(window.location.search).get("id");
+    } catch (e) {
+      // Very old browsers: parse the query by hand rather than failing shut.
+      var m = window.location.search.match(/[?&]id=([^&]*)/);
+      slug = m ? decodeURIComponent(m[1].replace(/\+/g, " ")) : null;
+    }
+
+    if (!slug) return;                       // no ?id= -> show the landing page below
+
+    // Only ever follow a path on our own site. An absolute URL in `id` would make
+    // this page an open redirect, which is worth refusing on principle.
+    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(slug)) return;
+
+    var sep = slug.charAt(0) === "/" ? "" : "/";
+    window.location.replace(TARGET + sep + slug);
+  })();
+</script>
+
+<style>
+  :root {
+    --bg: #fbfaf8;
+    --fg: #23201d;
+    --muted: #6b635b;
+    --accent: #7c6a58;
+    --card: #ffffff;
+    --border: #e7e1d9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #171513;
+      --fg: #ece7e1;
+      --muted: #a49b90;
+      --accent: #c3ad93;
+      --card: #201d1a;
+      --border: #322d28;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #171513;
+    --fg: #ece7e1;
+    --muted: #a49b90;
+    --accent: #c3ad93;
+    --card: #201d1a;
+    --border: #322d28;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .card {
+    width: 100%;
+    max-width: 30rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2.25rem 2rem;
+    text-align: center;
+  }
+  h1 {
+    margin: 0 0 .35rem;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .tag {
+    margin: 0 0 1.5rem;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  p { margin: 0 0 1.25rem; }
+  a.btn {
+    display: inline-block;
+    padding: .7rem 1.4rem;
+    border-radius: 9px;
+    background: var(--accent);
+    color: var(--bg);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  a.btn:hover { opacity: .9; }
+  .fine {
+    margin: 1.5rem 0 0;
+    font-size: .8rem;
+    color: var(--muted);
+  }
+  .fine a { color: var(--muted); }
+</style>
 </head>
 <body>
-  <h1>test</h1>
+  <div class="card">
+    <h1>Craft &amp; Bloom</h1>
+    <p class="tag">DIY projects, home decor and seasonal crafts.</p>
+
+    <p id="msg">Taking you to the full project&hellip;</p>
+    <p><a class="btn" id="go" href="https://ideashometalk.com">Continue</a></p>
+
+    <p class="fine">
+      If you are not redirected automatically,
+      <a href="https://ideashometalk.com">open ideashometalk.com</a>.
+    </p>
+  </div>
+
+  <script>
+    // Runs only when the redirect above did not fire (no ?id=, or JS-disabled users
+    // reading the noscript-equivalent copy). Keeps the button pointing somewhere useful.
+    (function () {
+      var slug = null;
+      try {
+        slug = new URLSearchParams(window.location.search).get("id");
+      } catch (e) {}
+
+      var go = document.getElementById("go");
+      var msg = document.getElementById("msg");
+
+      if (slug && !/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(slug)) {
+        var sep = slug.charAt(0) === "/" ? "" : "/";
+        go.href = TARGET + sep + slug;
+      } else {
+        msg.textContent = "Browse the latest DIY projects and home decor ideas.";
+        go.textContent = "Visit the site";
+      }
+    })();
+  </script>
 </body>
 </html>
